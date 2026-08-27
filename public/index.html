@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Asistente de Estudio IA</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- Barra lateral -->
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-icon">🎓</div>
+        <div>
+          <h1>Asistente de Estudio IA</h1>
+          <p>Tutor de informática</p>
+        </div>
+      </div>
+
+      <label class="field-label">¿Qué quieres hacer?</label>
+      <div class="task-grid">
+        <button class="task-btn active" data-tipo="explicar">
+          <span class="task-emoji">💡</span> Explicar
+        </button>
+        <button class="task-btn" data-tipo="ejercicios">
+          <span class="task-emoji">✏️</span> Ejercicio
+        </button>
+        <button class="task-btn" data-tipo="codigo">
+          <span class="task-emoji">💻</span> Código
+        </button>
+        <button class="task-btn" data-tipo="resumen">
+          <span class="task-emoji">📄</span> Resumen
+        </button>
+        <button class="task-btn" data-tipo="quiz">
+          <span class="task-emoji">🧠</span> Cuestionario
+        </button>
+      </div>
+
+      <label class="field-label" for="materia">Materia</label>
+      <select id="materia">
+        <option value="informatica general">Informática general</option>
+        <option value="programacion">Programación</option>
+        <option value="bases de datos">Bases de datos</option>
+        <option value="redes">Redes</option>
+        <option value="hardware">Hardware</option>
+        <option value="sistemas operativos">Sistemas operativos</option>
+        <option value="desarrollo web">Desarrollo web</option>
+        <option value="inteligencia artificial">Inteligencia artificial</option>
+      </select>
+
+      <div class="status" id="status">
+        <span class="status-dot"></span>
+        <span id="status-text">Conectando...</span>
+      </div>
+
+      <button class="btn-secundario" id="btn-nuevo">➕ Nueva conversación</button>
+    </aside>
+    <!-- Area de chat -->
+    <main class="chat-area">
+      <div class="chat-header">
+        <h2 id="titulo-tarea">💡 Explicar conceptos</h2>
+        <div class="header-derecha">
+          <span class="badge-pill">🎓 Tutor de informática</span>
+          <button class="btn-icono" id="btn-cambiar-clave" title="Cambiar contraseña">🔑</button>
+          <button class="btn-icono" id="btn-salir" title="Cerrar sesión">🚪</button>
+        </div>
+      </div>
+
+      <div id="mensajes" class="mensajes">
+        <div class="mensaje asistente">
+          <div class="avatar asistente-avatar">🤖</div>
+          <div class="burbuja">
+            👋 ¡Hola! Soy tu asistente de estudio de informática.
+            Cuéntame qué necesitas y te ayudo paso a paso.
+            Elige una tarea (Explicar, Ejercicio, Código, Resumen o Cuestionario), escribe tu pregunta y pulsa Enviar.
+          </div>
+        </div>
+      </div>
+
+      <div class="compose">
+        <div class="sugerencias" id="sugerencias"></div>
+        <div class="caja-entrada">
+          <textarea id="entrada" placeholder="Escribe tu pregunta aquí... (Enter para enviar, Shift+Enter para salto de línea)" rows="1"></textarea>
+          <button id="btn-enviar" class="btn-enviar">Enviar ➤</button>
+        </div>
+        <div class="compose-barra">
+          <span class="nota" id="nota"></span>
+          <span class="nota">Hecho con Cloudflare Workers AI</span>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Overlay de configuracion -->
+  <div id="overlay" class="overlay">
+    <div class="card">
+      <h2>⚙️ Configurar Cloudflare</h2>
+      <p>
+        Para usar la IA realmente, necesitas conectarte a <strong>Cloudflare Workers AI</strong>.
+        Es gratis para empezar. Tus datos se guardan localmente en la máquina.
+      </p>
+      <ol>
+        <li>Entra en <a href="https://dash.cloudflare.com/sign-up" target="_blank">dash.cloudflare.com</a> y crea una cuenta gratuita.</li>
+        <li>Obtén tu <strong>Account ID</strong> en la página de inicio del panel.</li>
+        <li>Crea un <strong>API Token</strong> (perfil → API Tokens → Create Token → Workers AI).</li>
+        <li>Guarda ambos en el archivo <code>credenciales.json</code> de la carpeta de la app:</li>
+      </ol>
+      <pre>{ "accountId": "TU_ACCOUNT_ID", "apiToken": "TU_API_TOKEN" }</pre>
+      <p class="nota-p">Reinicia la app tras guardar el archivo.</p>
+      <button id="btn-cerrar-aviso" class="btn-enviar">Entendido</button>
+    </div>
+  </div>
+
+  <!-- Pantalla de acceso (contraseña) -->
+  <div id="login" class="login-screen">
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="logo-icon">🎓</div>
+      </div>
+      <h1>Asistente de Estudio IA</h1>
+      <p class="login-sub">Tu tutor personal de informática</p>
+
+      <!-- Modo: configurar contraseña (primera vez) -->
+      <div id="login-config">
+        <h2>🔐 Crea tu contraseña</h2>
+        <p class="login-desc">Esto es lo primero.<br />Elige una contraseña personal y guárdala bien, es la única forma de entrar a la app.</p>
+        <div class="login-campo">
+          <input type="password" id="config-clave" placeholder="Escribe tu contraseña" autocomplete="new-password" />
+        </div>
+        <div class="login-campo">
+          <input type="password" id="config-clave2" placeholder="Repite tu contraseña" autocomplete="new-password" />
+        </div>
+        <p class="login-error" id="config-error"></p>
+        <button id="btn-config" class="btn-enviar btn-ancho">Crear contraseña y entrar</button>
+      </div>
+
+      <!-- Modo: iniciar sesion -->
+      <div id="login-entrar" style="display:none">
+        <h2>🔒 Inicia sesión</h2>
+        <p class="login-desc">Introduce tu contraseña para entrar.</p>
+        <div class="login-campo">
+          <input type="password" id="login-clave" placeholder="Tu contraseña" autocomplete="current-password" />
+        </div>
+        <p class="login-error" id="login-error"></p>
+        <button id="btn-entrar" class="btn-enviar btn-ancho">Entrar 👋</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialogo para cambiar contraseña -->
+  <div id="overlay-cambiar" class="overlay">
+    <div class="card">
+      <h2>🔑 Cambiar contraseña</h2>
+      <div class="login-campo">
+        <input type="password" id="cambiar-actual" placeholder="Contraseña actual" autocomplete="current-password" />
+      </div>
+      <div class="login-campo">
+        <input type="password" id="cambiar-nueva" placeholder="Nueva contraseña" autocomplete="new-password" />
+      </div>
+      <div class="login-campo">
+        <input type="password" id="cambiar-nueva2" placeholder="Repite la nueva contraseña" autocomplete="new-password" />
+      </div>
+      <p class="login-error" id="cambiar-error"></p>
+      <button id="btn-cambiar" class="btn-enviar btn-ancho">Guardar nueva contraseña</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

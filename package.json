@@ -1,0 +1,12 @@
+{
+  "name": "asistente-estudio-ia",
+  "version": "1.0.0",
+  "description": "Asistente de estudio con IA para tareas de informatica (Cloudflare Workers AI)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

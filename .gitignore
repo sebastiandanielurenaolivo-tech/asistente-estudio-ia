@@ -1,0 +1,9 @@
+# Datos privados: contraseña de acceso y credenciales de Cloudflare
+# NUNCA subir estos archivos a GitHub (contienen tu clave y tu token)
+clave.json
+credenciales.json
+
+# Caché y temporales
+node_modules/
+*.log
+.DS_Store

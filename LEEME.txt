@@ -1,0 +1,75 @@
+# 🎓 Asistente de Estudio IA
+
+Un asistente de estudio con IA, fácil de usar, que te ayuda con tus tareas de **informática**: explica conceptos, resuelve ejercicios, corrige código, hace resúmenes y genera cuestionarios de práctica.
+
+Funciona con **Cloudflare Workers AI** (gratis para empezar) y se ejecuta **localmente en tu PC** como una aplicación de escritorio en tu navegador.
+
+---
+
+## 🚀 Cómo usarlo
+
+1. **Instala Node.js** si no lo tienes: https://nodejs.org (versión 18 o superior).
+2. Haz **doble clic** en el archivo **`Iniciar Asistente IA.bat`** (Windows).
+3. Se abrirá tu navegador con la app lista para usar.
+4. La **primera vez** te pedirá que **crees tu contraseña de acceso**: elígue una y guárdala bien.
+5. A partir de entonces, cada vez que abras la app tendrás que poner esa contraseña para entrar.
+
+> 🔐 **Solo tú puedes entrar.** La app te pide la contraseña al abrirla.
+> La contraseña se guarda en el archivo `clave.json` de forma **oculta** (con encriptado), así nadie puede leerla.
+> Puedes cambiarla cuando quieras con el botón 🔑 de la parte superior.
+> Cierra la ventana negra para apagar la aplicación.
+
+---
+
+## 🔑 Activar la IA real (Cloudflare Workers AI)
+
+Por defecto la app funciona en **modo demo**. El modo demo ya incluye contenido educativo útil de informática (explicaciones, ejemplos de código, cuestionarios, etc.), ¡así que puedes empezar a usarla ya mismo!
+
+Para que responda **personalizado y completo** con la IA real de Cloudflare:
+
+1. Crea una cuenta gratuita en **https://dash.cloudflare.com/sign-up**.
+2. Copia tu **Account ID** (aparece en la página de inicio del panel).
+3. Crea un **API Token**:
+   - Ve a **Mi perfil → API Tokens → Create Token**.
+   - Elige la plantilla **"Workers AI"** (o crea un token personalizado con permiso *Workers AI:Use*).
+   - Copia el token generado (solo se muestra una vez).
+4. Crea un archivo llamado **`credenciales.json`** en la carpeta de la app (junto a `Iniciar Asistente IA.bat`) con este contenido:
+
+```json
+{
+  "accountId": "TU_ACCOUNT_ID",
+  "apiToken": "TU_API_TOKEN",
+  "modelo": "@cf/meta/llama-3.1-8b-instruct-fast"
+}
+```
+
+5. **Reinicia la app**. Ahora usará la IA de Cloudflare.
+
+> Puedes poner otro modelo compatible de [Workers AI](https://developers.cloudflare.com/workers-ai/models/) en el campo `modelo`.
+
+---
+
+## 🧰 Funciones
+
+| Función | Qué hace |
+|---------|----------|
+| 💡 **Explicar** | Explica conceptos de informática de forma clara y con ejemplos. |
+| ✏️ **Ejercicio** | Resuelve problemas paso a paso. |
+| 💻 **Código** | Escribe o corrige código con explicaciones. |
+| 📄 **Resumen** | Resume textos y apuntes de forma organizada. |
+| 🧠 **Cuestionario** | Genera preguntas de práctica para repasar. |
+
+También puedes:
+- Elegir la **materia** (programación, redes, bases de datos, etc.).
+- **Copiar** cualquier respuesta con un clic.
+- Cambiar al **tema oscuro**.
+- Iniciar una **nueva conversación**.
+
+---
+
+## 🛠️ Detalles técnicos
+
+- **Servidor:** `server.js` (Node.js nativo, sin dependencias externas).
+- **Interfaz:** `public/` (HTML, CSS y JavaScript).
+- **Lenguaje:** 100% español.
+- Las credenciales se guardan **solo en tu máquina** (archivo `credenciales.json`).

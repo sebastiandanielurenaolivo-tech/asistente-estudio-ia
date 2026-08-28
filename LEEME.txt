@@ -62,7 +62,8 @@ Para que responda **personalizado y completo** con la IA real de Cloudflare:
 También puedes:
 - Elegir la **materia** (programación, redes, bases de datos, etc.).
 - **Copiar** cualquier respuesta con un clic.
-- Cambiar al **tema oscuro**.
+- **Cambiar la contraseña** (botón 🔑).
+- **Cerrar sesión** (botón 🚪).
 - Iniciar una **nueva conversación**.
 
 ---

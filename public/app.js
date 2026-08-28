@@ -55,26 +55,32 @@ function renderMarkdown(texto) {
     if (linea.startsWith("### ")) return `<h3>${linea.slice(4).replace(/\*\*/g, "").replace(/\*/g, "").replace(/\`/g, "")}</h3>`;
     if (linea.startsWith("## ")) return `<h2>${linea.slice(3).replace(/\*\*/g, "").replace(/\*/g, "").replace(/\`/g, "")}</h2>`;
     if (linea.startsWith("# ")) return `<h1>${linea.slice(2).replace(/\*\*/g, "").replace(/\*/g, "").replace(/\`/g, "")}</h1>`;
-    if (/^\s*[-*]\s+/.test(linea)) return `<li>${linea.replace(/^\s*[-*]\s+/, "").replace(/\*\*/g, "<strong>").replace(/\*\*/g, "</strong>")}</li>`;
-    if (/^\s*\d+\.\s+/.test(linea)) return `<li>${linea.replace(/^\s*\d+\.\s+/, "").replace(/\*\*/g, "<strong>").replace(/\*\*/g, "</strong>")}</li>`;
+    if (/^\s*[-*]\s+/.test(linea)) return `<li>${linea.replace(/^\s*[-*]\s+/, "").replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>").replace(/`([^`]+)`/g, "<code>$1</code>")}</li>`;
+    if (/^\s*\d+\.\s+/.test(linea)) return `<li data-order="1">${linea.replace(/^\s*\d+\.\s+/, "").replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>").replace(/`([^`]+)`/g, "<code>$1</code>")}</li>`;
     if (linea.trim() === "") return "";
     return `<p>${linea.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/`([^`]+)`/g, "<code>$1</code>")}</p>`;
   });
 
   // Agrupar listas consecutivas
   let listaUl = [], listaOl = [], resultado = [];
+  const cerrarListas = () => {
+    if (listaUl.length) { resultado.push(`<ul>${listaUl.join("")}</ul>`); listaUl = []; }
+    if (listaOl.length) { resultado.push(`<ol>${listaOl.join("")}</ol>`); listaOl = []; }
+  };
   conLineas.forEach((l) => {
-    if (l.startsWith("<li>")) {
-      // determina si es ordenada por el contexto; asumimos ul por defecto
-      listaUl.push(l.replace(/^<li>/, "<li>"));
-      if (listaOl.length) { resultado.push(`<ol>${listaOl.join("")}</ol>`); listaOl = []; }
+    if (l.startsWith('<li data-order="1">')) {
+      cerrarListas();
+      listaOl.push(l.replace('data-order="1"', ""));
+      listaUl = [];
+    } else if (l.startsWith("<li>")) {
+      cerrarListas();
+      listaUl.push(l);
     } else {
-      if (listaUl.length) { resultado.push(`<ul>${listaUl.join("")}</ul>`); listaUl = []; }
+      if (listaUl.length || listaOl.length) cerrarListas();
       resultado.push(l);
     }
   });
-  if (listaUl.length) resultado.push(`<ul>${listaUl.join("")}</ul>`);
-  if (listaOl.length) resultado.push(`<ol>${listaOl.join("")}</ol>`);
+  cerrarListas();
 
   return resultado.join("");
 }
